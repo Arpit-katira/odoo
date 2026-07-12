@@ -1,6 +1,6 @@
 package com.odoo.features.expense.entity;
 
-import com.odoo.entities.Trip; // Aryan ke folder se Trip entity aayegi
+import com.odoo.features.trip.entity.Trip;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

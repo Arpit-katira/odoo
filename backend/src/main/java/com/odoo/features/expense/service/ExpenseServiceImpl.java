@@ -3,9 +3,10 @@ package com.odoo.features.expense.service;
 import com.odoo.features.expense.entity.Expense;
 import com.odoo.features.expense.dto.ExpenseRequestDTO;
 import com.odoo.features.expense.repository.ExpenseRepository;
+import com.odoo.features.trip.repository.TripRepository; // Naya Import
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import com.odoo.features.trip.entity.Trip;
 import java.util.List;
 
 @Service
@@ -13,8 +14,7 @@ import java.util.List;
 public class ExpenseServiceImpl implements ExpenseService {
 
     private final ExpenseRepository expenseRepository;
-
-    // private final TripRepository tripRepository; // TODO: Uncomment when Aryan creates it
+    private final TripRepository tripRepository; // Ab yeh active hai
 
     @Override
     public Expense logExpense(ExpenseRequestDTO dto) {
@@ -23,9 +23,12 @@ public class ExpenseServiceImpl implements ExpenseService {
         expense.setAmount(dto.getAmount());
         expense.setDescription(dto.getDescription());
 
-        // Trip linking hum baad mein karenge
-        // Trip trip = tripRepository.findById(dto.getTripId()).orElseThrow(...);
-        // expense.setTrip(trip);
+        // Linking Expense to Trip (Agar tripId request mein aayi hai)
+        if (dto.getTripId() != null) {
+            Trip trip = tripRepository.findById(dto.getTripId())
+                    .orElseThrow(() -> new RuntimeException("Trip not found with ID: " + dto.getTripId()));
+            expense.setTrip(trip);
+        }
 
         return expenseRepository.save(expense);
     }

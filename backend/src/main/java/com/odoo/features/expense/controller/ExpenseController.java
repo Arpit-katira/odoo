@@ -1,5 +1,6 @@
 package com.odoo.features.expense.controller;
 
+import com.odoo.common.response.ApiResponse; // Naya import
 import com.odoo.features.expense.entity.Expense;
 import com.odoo.features.expense.dto.ExpenseRequestDTO;
 import com.odoo.features.expense.service.ExpenseService;
@@ -17,16 +18,18 @@ public class ExpenseController {
 
     private final ExpenseService expenseService;
 
-    // POST API: Naya kharcha (expense) add karne ke liye
     @PostMapping
-    public ResponseEntity<Expense> logExpense(@RequestBody ExpenseRequestDTO request) {
+    public ResponseEntity<ApiResponse<Expense>> logExpense(@RequestBody ExpenseRequestDTO request) {
         Expense savedExpense = expenseService.logExpense(request);
-        return new ResponseEntity<>(savedExpense, HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                ApiResponse.success(savedExpense, "Expense logged successfully!"),
+                HttpStatus.CREATED
+        );
     }
 
-    // GET API: Saare expenses dekhne ke liye
     @GetMapping
-    public ResponseEntity<List<Expense>> getAllExpenses() {
-        return ResponseEntity.ok(expenseService.getAllExpenses());
+    public ResponseEntity<ApiResponse<List<Expense>>> getAllExpenses() {
+        List<Expense> expenses = expenseService.getAllExpenses();
+        return ResponseEntity.ok(ApiResponse.success(expenses, "All expenses fetched successfully."));
     }
 }
