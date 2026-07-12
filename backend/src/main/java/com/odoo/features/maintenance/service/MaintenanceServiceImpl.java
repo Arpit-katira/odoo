@@ -59,4 +59,44 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     public List<MaintenanceRecord> getAllMaintenanceRecords() {
         return maintenanceRepository.findAll();
     }
+
+    @Override
+    public MaintenanceRecord updateMaintenanceRecord(Long id, MaintenanceRequestDTO dto) {
+        MaintenanceRecord record = maintenanceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Maintenance record not found with ID: " + id));
+
+        MaintenanceStatus oldStatus = record.getStatus();
+        MaintenanceStatus newStatus = dto.getStatus();
+
+        record.setIssue(dto.getIssue());
+        record.setDescription(dto.getDescription());
+        record.setCost(dto.getCost());
+        record.setStatus(newStatus);
+
+        if (newStatus == MaintenanceStatus.OPEN && oldStatus != MaintenanceStatus.OPEN) {
+            record.setStartedAt(LocalDateTime.now());
+            record.setCompletedAt(null);
+        } else if (newStatus == MaintenanceStatus.CLOSED && oldStatus != MaintenanceStatus.CLOSED) {
+            record.setCompletedAt(LocalDateTime.now());
+        }
+
+        Vehicle vehicle = record.getVehicle();
+        if (vehicle != null) {
+            if (newStatus == MaintenanceStatus.OPEN) {
+                vehicle.setStatus(VehicleStatus.IN_SHOP);
+            } else if (newStatus == MaintenanceStatus.CLOSED) {
+                vehicle.setStatus(VehicleStatus.AVAILABLE);
+            }
+            vehicleRepository.save(vehicle);
+        }
+
+        return maintenanceRepository.save(record);
+    }
+
+    @Override
+    public void deleteMaintenanceRecord(Long id) {
+        MaintenanceRecord record = maintenanceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Maintenance record not found with ID: " + id));
+        maintenanceRepository.delete(record);
+    }
 }

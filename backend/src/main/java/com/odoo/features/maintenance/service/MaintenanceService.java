@@ -7,4 +7,6 @@ import java.util.List;
 public interface MaintenanceService {
     MaintenanceRecord logMaintenance(MaintenanceRequestDTO dto);
     List<MaintenanceRecord> getAllMaintenanceRecords();
+    MaintenanceRecord updateMaintenanceRecord(Long id, MaintenanceRequestDTO dto);
+    void deleteMaintenanceRecord(Long id);
 }

@@ -40,17 +40,31 @@ function saveAll(key, data) {
 // ------------------------------------------------------------------
 // Field mapping helpers
 // ------------------------------------------------------------------
+function toDisplayEnum(value) {
+  if (!value) return value;
+  return String(value)
+    .toLowerCase()
+    .split('_')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+function toBackendEnum(value) {
+  if (!value) return value;
+  return String(value).toUpperCase().replace(/\s+/g, '_');
+}
+
 function toFrontendVehicle(v) {
   return v ? {
     id: String(v.id),
     regNo: v.registrationNumber,
     name: v.model,
-    type: v.vehicleType,
+    type: toDisplayEnum(v.vehicleType),
     capacity: v.maxLoadCapacity,
     odometer: v.odometerReading,
     acquisitionCost: v.acquisitionCost,
     region: v.region,
-    status: v.status,
+    status: toDisplayEnum(v.status),
     createdAt: v.createdAt
   } : null;
 }
@@ -59,12 +73,12 @@ function toBackendVehicle(payload) {
   return {
     registrationNumber: payload.regNo,
     model: payload.name,
-    vehicleType: payload.type,
+    vehicleType: toBackendEnum(payload.type),
     maxLoadCapacity: payload.capacity,
     acquisitionCost: payload.acquisitionCost,
     odometerReading: payload.odometer,
     region: payload.region,
-    status: payload.status
+    status: toBackendEnum(payload.status)
   };
 }
 
@@ -79,7 +93,7 @@ function toFrontendDriver(d) {
     contact: d.user?.phoneNumber || d.phoneNumber,
     phoneNumber: d.user?.phoneNumber || d.phoneNumber,
     safetyScore: d.safetyScore,
-    status: d.status,
+    status: toDisplayEnum(d.status),
     createdAt: d.createdAt
   } : null;
 }
@@ -88,7 +102,7 @@ function toBackendDriver(payload) {
   return {
     userId: payload.userId ? Number(payload.userId) : null,
     licenseNumber: payload.licenseNo,
-    licenseCategory: payload.licenseCategory,
+    licenseCategory: toBackendEnum(payload.licenseCategory),
     licenseExpiry: payload.licenseExpiry
   };
 }
@@ -106,7 +120,7 @@ function toFrontendTrip(t) {
     startOdometer: t.startOdometer,
     endOdometer: t.endOdometer,
     revenue: t.revenue,
-    status: t.status,
+    status: toDisplayEnum(t.status),
     dispatchedAt: t.dispatchedAt,
     completedAt: t.completedAt,
     createdAt: t.createdAt || t.dispatchedAt
@@ -143,7 +157,7 @@ function toFrontendMaintenance(m) {
     issue: m.issue,
     description: m.description,
     cost: m.cost,
-    status: m.status,
+    status: toDisplayEnum(m.status),
     startDate: m.startedAt?.slice(0, 10),
     startedAt: m.startedAt,
     completedAt: m.completedAt,
@@ -158,7 +172,7 @@ function toBackendMaintenance(payload) {
     issue: payload.type || payload.issue,
     description: payload.description,
     cost: payload.cost,
-    status: payload.status || 'OPEN'
+    status: toBackendEnum(payload.status) || 'OPEN'
   };
 }
 
@@ -175,6 +189,7 @@ function toFrontendFuel(f) {
   } : null;
 }
 
+
 function toBackendFuel(payload) {
   return {
     tripId: Number(payload.tripId),
@@ -188,8 +203,8 @@ function toFrontendExpense(e) {
   return e ? {
     id: String(e.id),
     tripId: String(e.trip?.id || e.tripId),
-    type: e.expenseType,
-    expenseType: e.expenseType,
+    type: toDisplayEnum(e.expenseType),
+    expenseType: toDisplayEnum(e.expenseType),
     amount: e.amount,
     description: e.description,
     date: e.createdAt?.slice(0, 10),
@@ -200,7 +215,7 @@ function toFrontendExpense(e) {
 function toBackendExpense(payload) {
   return {
     tripId: Number(payload.tripId),
-    expenseType: payload.type || payload.expenseType,
+    expenseType: toBackendEnum(payload.type || payload.expenseType),
     amount: payload.amount,
     description: payload.description
   };
@@ -245,6 +260,8 @@ function toBackendUpdateUser(payload) {
 // API
 // ------------------------------------------------------------------
 const API = {
+  seed: () => Promise.resolve(),
+
   login: async (email, password) => {
     const data = await request('POST', '/api/v1/auth/login', { email, password });
     if (data.token) {
@@ -317,9 +334,8 @@ const API = {
   },
 
   getDrivers: async () => {
-    const cached = getAll('drivers');
-    if (cached.length) return cached;
-    return [];
+    const data = await request('GET', '/api/drivers');
+    return data.map(toFrontendDriver);
   },
 
   getAvailableDrivers: async () => {
@@ -332,19 +348,11 @@ const API = {
   },
 
   updateDriver: async (id, payload) => {
-    const drivers = getAll('drivers');
-    const idx = drivers.findIndex(d => d.id === id);
-    if (idx !== -1) {
-      drivers[idx] = { ...drivers[idx], ...payload };
-      saveAll('drivers', drivers);
-      return drivers[idx];
-    }
-    throw new Error('Driver update not supported by backend yet');
+    return toFrontendDriver(await request('PUT', `/api/drivers/${id}`, toBackendDriver(payload)));
   },
 
   deleteDriver: async (id) => {
-    const drivers = getAll('drivers').filter(d => d.id !== id);
-    saveAll('drivers', drivers);
+    return request('DELETE', `/api/drivers/${id}`);
   },
 
   getTrips: async () => {
@@ -390,7 +398,7 @@ const API = {
   },
 
   closeMaintenance: async (id) => {
-    return toFrontendMaintenance(await request('PUT', `/api/maintenance/${id}`, { status: 'COMPLETED' }));
+    return toFrontendMaintenance(await request('PUT', `/api/maintenance/${id}`, { status: 'CLOSED' }));
   },
 
   deleteMaintenance: async (id) => {
@@ -436,13 +444,13 @@ const API = {
     const drivers = await API.getAvailableDrivers();
     const trips = await API.getTrips();
 
-    const activeVehicles = vehicles.filter(v => v.status === 'ON_TRIP').length;
-    const availableVehicles = vehicles.filter(v => v.status === 'AVAILABLE').length;
-    const inMaintenance = vehicles.filter(v => v.status === 'IN_SHOP').length;
-    const activeTrips = trips.filter(t => t.status === 'DISPATCHED').length;
-    const pendingTrips = trips.filter(t => t.status === 'DRAFT').length;
-    const driversOnDuty = drivers.filter(d => d.status === 'ON_TRIP').length;
-    const totalVehicles = vehicles.filter(v => v.status !== 'RETIRED').length;
+    const activeVehicles = vehicles.filter(v => v.status === 'On Trip').length;
+    const availableVehicles = vehicles.filter(v => v.status === 'Available').length;
+    const inMaintenance = vehicles.filter(v => v.status === 'In Shop').length;
+    const activeTrips = trips.filter(t => t.status === 'Dispatched').length;
+    const pendingTrips = trips.filter(t => t.status === 'Draft').length;
+    const driversOnDuty = drivers.filter(d => d.status === 'On Trip').length;
+    const totalVehicles = vehicles.filter(v => v.status !== 'Retired').length;
     const fleetUtilization = totalVehicles ? Math.round((activeVehicles / totalVehicles) * 100) : 0;
 
     return { activeVehicles, availableVehicles, inMaintenance, activeTrips, pendingTrips, driversOnDuty, fleetUtilization };
@@ -456,7 +464,7 @@ const API = {
     const maintenance = await API.getMaintenance();
 
     return vehicles.map(v => {
-      const vehicleTrips = trips.filter(t => t.vehicleId === v.id && t.status === 'COMPLETED');
+      const vehicleTrips = trips.filter(t => t.vehicleId === v.id && t.status === 'Completed');
       const distance = vehicleTrips.reduce((s, t) => s + (t.plannedDistance || 0), 0);
       const revenue = vehicleTrips.reduce((s, t) => s + (t.revenue || 0), 0);
 

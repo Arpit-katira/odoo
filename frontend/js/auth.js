@@ -28,9 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       btn.disabled = true;
       btn.textContent = 'Signing in...';
-      const user = await API.login(email, password);
-      saveToStorage('transitops-user', user);
-      toast(`Welcome, ${user.name}!`, 'success');
+      const result = await API.login(email, password);
+      const user = result?.user || result;
+      if (user) saveToStorage('transitops-user', user);
+      toast(`Welcome, ${user?.name || 'User'}!`, 'success');
       window.location.href = 'dashboard.html';
     } catch (err) {
       if (errorBox) {

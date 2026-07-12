@@ -37,4 +37,31 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<Expense> getAllExpenses() {
         return expenseRepository.findAll();
     }
+
+    @Override
+    public Expense updateExpense(Long id, ExpenseRequestDTO dto) {
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Expense not found with ID: " + id));
+
+        expense.setExpenseType(dto.getExpenseType());
+        expense.setAmount(dto.getAmount());
+        expense.setDescription(dto.getDescription());
+
+        if (dto.getTripId() != null) {
+            Trip trip = tripRepository.findById(dto.getTripId())
+                    .orElseThrow(() -> new RuntimeException("Trip not found with ID: " + dto.getTripId()));
+            expense.setTrip(trip);
+        } else {
+            expense.setTrip(null);
+        }
+
+        return expenseRepository.save(expense);
+    }
+
+    @Override
+    public void deleteExpense(Long id) {
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Expense not found with ID: " + id));
+        expenseRepository.delete(expense);
+    }
 }

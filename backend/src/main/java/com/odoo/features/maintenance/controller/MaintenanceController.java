@@ -34,4 +34,18 @@ public class MaintenanceController {
                 "All maintenance records fetched"
         ));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<MaintenanceRecord>> updateMaintenanceRecord(
+            @PathVariable Long id,
+            @RequestBody MaintenanceRequestDTO request) {
+        MaintenanceRecord record = maintenanceService.updateMaintenanceRecord(id, request);
+        return ResponseEntity.ok(ApiResponse.success(record, "Maintenance record updated successfully"));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteMaintenanceRecord(@PathVariable Long id) {
+        maintenanceService.deleteMaintenanceRecord(id);
+        return ResponseEntity.ok(ApiResponse.success(null, "Maintenance record deleted successfully"));
+    }
 }

@@ -32,4 +32,18 @@ public class ExpenseController {
         List<Expense> expenses = expenseService.getAllExpenses();
         return ResponseEntity.ok(ApiResponse.success(expenses, "All expenses fetched successfully."));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<Expense>> updateExpense(
+            @PathVariable Long id,
+            @RequestBody ExpenseRequestDTO request) {
+        Expense updatedExpense = expenseService.updateExpense(id, request);
+        return ResponseEntity.ok(ApiResponse.success(updatedExpense, "Expense updated successfully!"));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteExpense(@PathVariable Long id) {
+        expenseService.deleteExpense(id);
+        return ResponseEntity.ok(ApiResponse.success(null, "Expense deleted successfully!"));
+    }
 }

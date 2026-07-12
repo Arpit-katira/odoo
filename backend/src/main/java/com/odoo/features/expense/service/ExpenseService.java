@@ -7,4 +7,6 @@ import java.util.List;
 public interface ExpenseService {
     Expense logExpense(ExpenseRequestDTO dto);
     List<Expense> getAllExpenses();
+    Expense updateExpense(Long id, ExpenseRequestDTO dto);
+    void deleteExpense(Long id);
 }
