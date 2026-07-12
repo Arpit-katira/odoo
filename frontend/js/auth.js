@@ -1,9 +1,14 @@
+/**
+ * TransitOps — Authentication Page Logic
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
 
   const form = $('#loginForm');
   const errorBox = $('#loginError');
 
+  // Auto redirect if already logged in
   const user = loadFromStorage('transitops-user');
   if (user) {
     window.location.href = 'dashboard.html';

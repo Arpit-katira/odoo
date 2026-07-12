@@ -1,3 +1,6 @@
+/**
+ * TransitOps — Shared Utilities
+ */
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));

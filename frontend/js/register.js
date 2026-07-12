@@ -1,3 +1,7 @@
+/**
+ * TransitOps — Registration Page Logic
+ */
+
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
 
@@ -6,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const successBox = $('#registerSuccess');
   const roleSelect = $('#roleId');
 
+  // Redirect if already logged in
   const user = loadFromStorage('transitops-user');
   if (user) {
     window.location.href = 'dashboard.html';

@@ -1,3 +1,7 @@
+/**
+ * TransitOps — Vehicle Registry Page Logic
+ */
+
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
   initSidebar();

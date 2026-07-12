@@ -1,3 +1,7 @@
+/**
+ * TransitOps — Dashboard Page Logic
+ */
+
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
   initSidebar();

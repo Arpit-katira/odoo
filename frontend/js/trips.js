@@ -1,3 +1,6 @@
+/**
+ * TransitOps — Trip Management Page Logic
+ */
 
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();

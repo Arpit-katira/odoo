@@ -1,4 +1,6 @@
-
+/**
+ * TransitOps — Maintenance Page Logic
+ */
 
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
