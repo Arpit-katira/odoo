@@ -2,13 +2,12 @@ package com.odoo.entities;
 
 
 import com.odoo.entities.enums.MaintenanceStatus;
+import com.odoo.features.vehicle.entity.Vehicle;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 @Entity
 @Table(name = "maintenance_records")

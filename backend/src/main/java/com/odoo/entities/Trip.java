@@ -2,6 +2,7 @@ package com.odoo.entities;
 
 
 import com.odoo.entities.enums.TripStatus;
+import com.odoo.features.vehicle.entity.Vehicle;
 import com.odoo.features.driver.entity.Driver;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;

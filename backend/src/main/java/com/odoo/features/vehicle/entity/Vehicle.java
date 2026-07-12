@@ -1,17 +1,25 @@
-package com.odoo.entities;
+package com.odoo.features.vehicle.entity;
 
 
+import com.odoo.entities.MaintenanceRecord;
+import com.odoo.entities.Trip;
 import com.odoo.entities.enums.VehicleStatus;
 import com.odoo.entities.enums.VehicleType;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "vehicles")
 public class Vehicle {
