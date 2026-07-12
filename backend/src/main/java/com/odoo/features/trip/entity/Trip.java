@@ -2,7 +2,7 @@ package com.odoo.features.trip.entity;
 
 
 import com.odoo.features.expense.entity.Expense;
-import com.odoo.entities.FuelLog;
+import com.odoo.features.fuel.entity.FuelLog;
 import com.odoo.entities.enums.TripStatus;
 import com.odoo.features.vehicle.entity.Vehicle;
 import com.odoo.features.driver.entity.Driver;
