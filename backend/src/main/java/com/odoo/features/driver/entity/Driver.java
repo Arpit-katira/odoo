@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,8 +26,9 @@ public class Driver {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JsonIgnore
+    @OneToOne(optional = true)
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
 
     @Column(nullable = false, unique = true)
@@ -42,6 +44,7 @@ public class Driver {
     @Enumerated(EnumType.STRING)
     private DriverStatus status;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "driver")
     private List<Trip> trips = new ArrayList<>();
 
