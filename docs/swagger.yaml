@@ -1,0 +1,381 @@
+openapi: 3.0.3
+
+info:
+  title: TransitOps API
+  description: Fleet Operations & Logistics Management System
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api
+
+tags:
+  - name: Authentication
+  - name: Dashboard
+  - name: Users
+  - name: Drivers
+  - name: Vehicles
+  - name: Trips
+  - name: Maintenance
+  - name: Fuel
+  - name: Expenses
+  - name: Reports
+
+paths:
+
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Login
+
+  /auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register User
+
+  /auth/me:
+    get:
+      tags: [Authentication]
+      summary: Current Logged In User
+
+  /dashboard/summary:
+    get:
+      tags: [Dashboard]
+      summary: Dashboard Summary
+
+  /users:
+    get:
+      tags: [Users]
+      summary: Get All Users
+    post:
+      tags: [Users]
+      summary: Create User
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: Get User By ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    put:
+      tags: [Users]
+      summary: Update User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    delete:
+      tags: [Users]
+      summary: Delete User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /drivers:
+    get:
+      tags: [Drivers]
+      summary: Get All Drivers
+    post:
+      tags: [Drivers]
+      summary: Create Driver
+
+  /drivers/{id}:
+    get:
+      tags: [Drivers]
+      summary: Get Driver
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    put:
+      tags: [Drivers]
+      summary: Update Driver
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    delete:
+      tags: [Drivers]
+      summary: Delete Driver
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /vehicles:
+    get:
+      tags: [Vehicles]
+      summary: Get All Vehicles
+    post:
+      tags: [Vehicles]
+      summary: Add Vehicle
+
+  /vehicles/{id}:
+    get:
+      tags: [Vehicles]
+      summary: Get Vehicle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    put:
+      tags: [Vehicles]
+      summary: Update Vehicle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    delete:
+      tags: [Vehicles]
+      summary: Delete Vehicle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /trips:
+    get:
+      tags: [Trips]
+      summary: Get All Trips
+    post:
+      tags: [Trips]
+      summary: Create Trip
+
+  /trips/{id}:
+    get:
+      tags: [Trips]
+      summary: Get Trip
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    put:
+      tags: [Trips]
+      summary: Update Trip
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    delete:
+      tags: [Trips]
+      summary: Delete Trip
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /trips/{id}/dispatch:
+    post:
+      tags: [Trips]
+      summary: Dispatch Trip
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /trips/{id}/complete:
+    post:
+      tags: [Trips]
+      summary: Complete Trip
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /trips/{id}/cancel:
+    post:
+      tags: [Trips]
+      summary: Cancel Trip
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /maintenance:
+    get:
+      tags: [Maintenance]
+      summary: Get Maintenance Records
+    post:
+      tags: [Maintenance]
+      summary: Create Maintenance Record
+
+  /maintenance/{id}:
+    get:
+      tags: [Maintenance]
+      summary: Get Maintenance Record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    put:
+      tags: [Maintenance]
+      summary: Update Maintenance Record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    delete:
+      tags: [Maintenance]
+      summary: Delete Maintenance Record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /maintenance/{id}/complete:
+    post:
+      tags: [Maintenance]
+      summary: Complete Maintenance
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /fuel:
+    get:
+      tags: [Fuel]
+      summary: Get Fuel Logs
+    post:
+      tags: [Fuel]
+      summary: Add Fuel Log
+
+  /fuel/{id}:
+    get:
+      tags: [Fuel]
+      summary: Get Fuel Log
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    put:
+      tags: [Fuel]
+      summary: Update Fuel Log
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    delete:
+      tags: [Fuel]
+      summary: Delete Fuel Log
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /expenses:
+    get:
+      tags: [Expenses]
+      summary: Get Expenses
+    post:
+      tags: [Expenses]
+      summary: Create Expense
+
+  /expenses/{id}:
+    get:
+      tags: [Expenses]
+      summary: Get Expense
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    put:
+      tags: [Expenses]
+      summary: Update Expense
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    delete:
+      tags: [Expenses]
+      summary: Delete Expense
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /reports/summary:
+    get:
+      tags: [Reports]
+      summary: Summary Report
+
+  /reports/revenue:
+    get:
+      tags: [Reports]
+      summary: Revenue Report
+
+  /reports/fuel-cost:
+    get:
+      tags: [Reports]
+      summary: Fuel Cost Report
+
+  /reports/maintenance-cost:
+    get:
+      tags: [Reports]
+      summary: Maintenance Cost Report
+
+  /reports/operational-cost:
+    get:
+      tags: [Reports]
+      summary: Operational Cost Report
+
+  /reports/fleet-utilization:
+    get:
+      tags: [Reports]
+      summary: Fleet Utilization Report
+
+  /reports/roi:
+    get:
+      tags: [Reports]
+      summary: ROI Report
