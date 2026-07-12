@@ -1,6 +1,3 @@
-/**
- * TransitOps — Authentication Page Logic
- */
 
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();

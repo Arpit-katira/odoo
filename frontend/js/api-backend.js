@@ -1,17 +1,3 @@
-/**
- * TransitOps — Backend API Service (ready for Spring Boot)
- *
- * This file connects the frontend to the Spring Boot backend using fetch().
- * It stores the JWT token in localStorage and maps backend field names
- * to the camelCase names used by the rest of the frontend.
- *
- * To use it: in each HTML page, replace
- *   <script src="js/api.js"></script>
- * with
- *   <script src="js/api-backend.js"></script>
- *
- * Backend base URL: http://localhost:8080
- */
 
 const BASE_URL = 'http://localhost:8080';
 

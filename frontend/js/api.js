@@ -1,17 +1,3 @@
-/**
- * TransitOps — Mock API Service
- *
- * This file simulates a Spring Boot REST backend using localStorage.
- * When your backend team is ready, replace the function bodies with real fetch() calls
- * to endpoints like:
- *   GET    /api/vehicles
- *   POST   /api/vehicles
- *   GET    /api/vehicles/{id}
- *   PUT    /api/vehicles/{id}
- *   DELETE /api/vehicles/{id}
- *
- * All functions return Promises so real fetch integration is a drop-in replacement.
- */
 
 const STORAGE_KEYS = {
   roles: 'transitops-roles',

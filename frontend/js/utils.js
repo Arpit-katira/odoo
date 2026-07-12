@@ -12,18 +12,24 @@ const ROLES = {
   FINANCE: 'Financial Analyst'
 };
 
+function normalizeRole(role) {
+  if (!role) return '';
+  return String(role).trim().toLowerCase().replace(/\s+/g, '_');
+}
+
 function getAccess(module, role) {
+  const normalizedRole = normalizeRole(role);
   const matrix = {
-    users:       { [ROLES.ADMIN]: 'full' },
-    drivers:     { [ROLES.ADMIN]: 'full', [ROLES.DISPATCHER]: 'full', [ROLES.SAFETY]: 'full', [ROLES.FINANCE]: 'view' },
-    vehicles:    { [ROLES.ADMIN]: 'full', [ROLES.DISPATCHER]: 'full', [ROLES.SAFETY]: 'view', [ROLES.FINANCE]: 'view' },
-    trips:       { [ROLES.ADMIN]: 'full', [ROLES.DISPATCHER]: 'full', [ROLES.SAFETY]: 'view', [ROLES.FINANCE]: 'view' },
-    maintenance: { [ROLES.ADMIN]: 'full', [ROLES.SAFETY]: 'full', [ROLES.FINANCE]: 'view' },
-    fuel:        { [ROLES.ADMIN]: 'full', [ROLES.FINANCE]: 'full' },
-    expenses:    { [ROLES.ADMIN]: 'full', [ROLES.FINANCE]: 'full' },
-    reports:     { [ROLES.ADMIN]: 'full', [ROLES.FINANCE]: 'full', [ROLES.SAFETY]: 'view' }
+    users:       { admin: 'full' },
+    drivers:     { admin: 'full', dispatcher: 'full', safety_officer: 'full', financial_analyst: 'view' },
+    vehicles:    { admin: 'full', dispatcher: 'full', safety_officer: 'view', financial_analyst: 'view' },
+    trips:       { admin: 'full', dispatcher: 'full', safety_officer: 'view', financial_analyst: 'view' },
+    maintenance: { admin: 'full', safety_officer: 'full', financial_analyst: 'view' },
+    fuel:        { admin: 'full', financial_analyst: 'full' },
+    expenses:    { admin: 'full', financial_analyst: 'full' },
+    reports:     { admin: 'full', financial_analyst: 'full', safety_officer: 'view' }
   };
-  return matrix[module]?.[role] || 'none';
+  return matrix[module]?.[normalizedRole] || 'none';
 }
 
 function canEdit(module, role) {
@@ -59,7 +65,13 @@ function guardPageAccess(module) {
   }
   if (!canView(module, user.role)) {
     toast('You do not have access to this module.', 'error');
-    window.location.href = '../dashboard.html';
+    // Don't redirect to dashboard if already on dashboard to avoid loops
+    const currentPage = location.pathname.split('/').pop() || 'dashboard.html';
+    if (currentPage === 'dashboard.html' || module === 'dashboard') {
+      window.location.href = '../index.html';
+    } else {
+      window.location.href = '../dashboard.html';
+    }
     return null;
   }
   return user;
