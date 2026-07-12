@@ -21,7 +21,7 @@ public class DriverController {
     @PostMapping
     public ResponseEntity<ApiResponse<Driver>> addDriver(@RequestBody DriverRequestDTO request) {
         Driver newDriver = driverService.addDriver(request);
-        // ApiResponse.success() use kar rahe hain message ke sath
+
         return new ResponseEntity<>(
                 ApiResponse.success(newDriver, "Driver registered successfully!"),
                 HttpStatus.CREATED
@@ -31,7 +31,7 @@ public class DriverController {
     @GetMapping("/available")
     public ResponseEntity<ApiResponse<List<Driver>>> getAvailableDrivers() {
         List<Driver> drivers = driverService.getAvailableDrivers();
-        // Agar list khali hai toh message alag bhej sakte hain
+
         String message = drivers.isEmpty() ? "No available drivers found." : "Available drivers fetched.";
 
         return ResponseEntity.ok(ApiResponse.success(drivers, message));

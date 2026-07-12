@@ -15,7 +15,7 @@ public class DriverServiceImpl implements DriverService {
 
     private final DriverRepository driverRepository;
 
-    // private final UserRepository userRepository; // Uncomment jab Aryan UserRepository bana de
+
 
     @Override
     public Driver addDriver(DriverRequestDTO dto) {
@@ -25,8 +25,7 @@ public class DriverServiceImpl implements DriverService {
 
         Driver driver = new Driver();
 
-        // Agar aapke IDE mein setLicenseNumber() par error aaye,
-        // toh Aryan ko bolna ki apne Driver.java (Entity) mein @Data add kare.
+
         driver.setLicenseNumber(dto.getLicenseNumber());
         driver.setLicenseCategory(dto.getLicenseCategory());
         driver.setLicenseExpiry(dto.getLicenseExpiry());

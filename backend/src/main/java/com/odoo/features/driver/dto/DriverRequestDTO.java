@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class DriverRequestDTO {
-    private Long userId; // Jab User entity set ho jayegi, tab isko use karenge
+    private Long userId;
     private String licenseNumber;
     private LicenseCategory licenseCategory;
     private LocalDate licenseExpiry;

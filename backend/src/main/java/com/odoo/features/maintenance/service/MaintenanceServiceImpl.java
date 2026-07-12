@@ -5,7 +5,7 @@ import com.odoo.features.maintenance.entity.MaintenanceRecord;
 import com.odoo.features.maintenance.entity.MaintenanceStatus;
 import com.odoo.features.maintenance.repository.MaintenanceRepository;
 
-// Naye aur activated imports
+
 import com.odoo.features.vehicle.entity.Vehicle;
 import com.odoo.features.vehicle.repository.VehicleRepository;
 import com.odoo.entities.enums.VehicleStatus;
@@ -22,7 +22,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     private final MaintenanceRepository maintenanceRepository;
 
-    // Ab yeh active ho gaya hai kyunki Aryan ne bana diya hai!
+
     private final VehicleRepository vehicleRepository;
 
     @Override
@@ -39,23 +39,23 @@ public class MaintenanceServiceImpl implements MaintenanceService {
             record.setCompletedAt(LocalDateTime.now());
         }
 
-        // 🔥 THE TRIGGER LOGIC 🔥
+
         if (dto.getVehicleId() != null) {
-            // 1. Gadi dhoondho
+
             Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())
                     .orElseThrow(() -> new RuntimeException("Vehicle not found with ID: " + dto.getVehicleId()));
 
-            // 2. Record mein gadi link karo
+
             record.setVehicle(vehicle);
 
-            // 3. Gadi ka status automatically change karo!
+
             if (dto.getStatus() == MaintenanceStatus.IN_PROGRESS) {
-                vehicle.setStatus(VehicleStatus.IN_SHOP); // Gadi workshop mein gayi
+                vehicle.setStatus(VehicleStatus.IN_SHOP);
             } else if (dto.getStatus() == MaintenanceStatus.COMPLETED) {
-                vehicle.setStatus(VehicleStatus.AVAILABLE); // Gadi theek ho kar aagayi
+                vehicle.setStatus(VehicleStatus.AVAILABLE);
             }
 
-            // 4. Gadi ka naya status save karo
+
             vehicleRepository.save(vehicle);
         }
 

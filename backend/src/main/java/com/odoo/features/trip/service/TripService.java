@@ -17,6 +17,7 @@ import com.odoo.features.vehicle.entity.Vehicle;
 import com.odoo.features.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,16 +31,11 @@ public class TripService {
     private final DriverRepository driverRepository;
 
     public TripResponse createTrip(CreateTripRequest request) {
-
         Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Vehicle not found.")
-                );
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found."));
 
         Driver driver = driverRepository.findById(request.getDriverId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Driver not found.")
-                );
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found."));
 
         if (vehicle.getStatus() != VehicleStatus.AVAILABLE) {
             throw new ConflictException("Vehicle is not available.");
@@ -51,48 +47,27 @@ public class TripService {
 
         String tripNumber = "TRIP-" + System.currentTimeMillis();
 
-        Trip trip = TripMapper.toEntity(
-                request,
-                vehicle,
-                driver,
-                tripNumber
-        );
+        Trip trip = TripMapper.toEntity(request, vehicle, driver, tripNumber);
 
-        trip = tripRepository.save(trip);
+        // Use DRAFT as the initial status
+        trip.setStatus(TripStatus.DRAFT);
 
-        return TripMapper.toResponse(trip);
+        return TripMapper.toResponse(tripRepository.save(trip));
     }
-
 
     public List<TripResponse> getAllTrips() {
-
-        return tripRepository.findAll()
-                .stream()
-                .map(TripMapper::toResponse)
-                .toList();
+        return tripRepository.findAll().stream().map(TripMapper::toResponse).toList();
     }
 
-
     public TripResponse getTripById(Long id) {
-
         Trip trip = tripRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Trip not found.")
-                );
-
+                .orElseThrow(() -> new ResourceNotFoundException("Trip not found."));
         return TripMapper.toResponse(trip);
     }
 
-
-    public TripResponse updateTrip(
-            Long id,
-            UpdateTripRequest request
-    ) {
-
+    public TripResponse updateTrip(Long id, UpdateTripRequest request) {
         Trip trip = tripRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Trip not found.")
-                );
+                .orElseThrow(() -> new ResourceNotFoundException("Trip not found."));
 
         trip.setSource(request.getSource());
         trip.setDestination(request.getDestination());
@@ -100,28 +75,19 @@ public class TripService {
         trip.setPlannedDistance(request.getPlannedDistance());
         trip.setRevenue(request.getRevenue());
 
-        trip = tripRepository.save(trip);
-
-        return TripMapper.toResponse(trip);
+        return TripMapper.toResponse(tripRepository.save(trip));
     }
 
-
     public void deleteTrip(Long id) {
-
         Trip trip = tripRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Trip not found.")
-                );
-
+                .orElseThrow(() -> new ResourceNotFoundException("Trip not found."));
         tripRepository.delete(trip);
     }
 
+    @Transactional
     public TripResponse dispatchTrip(Long id) {
-
         Trip trip = tripRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Trip not found.")
-                );
+                .orElseThrow(() -> new ResourceNotFoundException("Trip not found."));
 
         if (trip.getStatus() != TripStatus.DRAFT) {
             throw new ConflictException("Only draft trips can be dispatched.");
@@ -139,20 +105,13 @@ public class TripService {
         vehicleRepository.save(vehicle);
         driverRepository.save(driver);
 
-        trip = tripRepository.save(trip);
-
-        return TripMapper.toResponse(trip);
+        return TripMapper.toResponse(tripRepository.save(trip));
     }
 
-    public TripResponse completeTrip(
-            Long id,
-            Double endOdometer
-    ) {
-
+    @Transactional
+    public TripResponse completeTrip(Long id, Double endOdometer) {
         Trip trip = tripRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Trip not found.")
-                );
+                .orElseThrow(() -> new ResourceNotFoundException("Trip not found."));
 
         if (trip.getStatus() != TripStatus.DISPATCHED) {
             throw new ConflictException("Trip is not dispatched.");
@@ -172,27 +131,18 @@ public class TripService {
         vehicleRepository.save(vehicle);
         driverRepository.save(driver);
 
-        trip = tripRepository.save(trip);
-
-        return TripMapper.toResponse(trip);
+        return TripMapper.toResponse(tripRepository.save(trip));
     }
 
     public TripResponse cancelTrip(Long id) {
-
         Trip trip = tripRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Trip not found.")
-                );
+                .orElseThrow(() -> new ResourceNotFoundException("Trip not found."));
 
         if (trip.getStatus() != TripStatus.DRAFT) {
             throw new ConflictException("Only draft trips can be cancelled.");
         }
 
         trip.setStatus(TripStatus.CANCELLED);
-
-        trip = tripRepository.save(trip);
-
-        return TripMapper.toResponse(trip);
+        return TripMapper.toResponse(tripRepository.save(trip));
     }
-
 }
