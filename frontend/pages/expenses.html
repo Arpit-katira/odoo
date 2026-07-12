@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fuel & Expenses — TransitOps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span>🚛</span>
+        <span>TransitOps</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item" data-module="dashboard"><span class="icon">📊</span> Dashboard</a>
+        <a href="vehicles.html" class="nav-item" data-module="vehicles"><span class="icon">🚐</span> Vehicles</a>
+        <a href="drivers.html" class="nav-item" data-module="drivers"><span class="icon">👤</span> Drivers</a>
+        <a href="trips.html" class="nav-item" data-module="trips"><span class="icon">🛣️</span> Trips</a>
+        <a href="maintenance.html" class="nav-item" data-module="maintenance"><span class="icon">🔧</span> Maintenance</a>
+        <a href="expenses.html" class="nav-item" data-module="fuel"><span class="icon">💰</span> Fuel & Expenses</a>
+        <a href="reports.html" class="nav-item" data-module="reports"><span class="icon">📈</span> Reports</a>
+        <a href="users.html" class="nav-item" data-module="users"><span class="icon">🛡️</span> Users</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div>Fleet operations made simple.</div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle">☰</button>
+          <h2 class="page-title">Fuel & Expenses</h2>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" data-theme-toggle>🌙</button>
+          <div class="user-pill">
+            <div class="user-avatar"></div>
+            <div>
+              <div class="user-name font-semibold"></div>
+              <div class="user-role text-xs text-muted"></div>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-sm" data-logout>Logout</button>
+        </div>
+      </header>
+
+      <section class="page-body" data-require-view="fuel">
+        <div class="page-header">
+          <div>
+            <h1>Fuel & Expenses</h1>
+            <p class="text-secondary text-sm">Record fuel logs and operational expenses</p>
+          </div>
+          <div class="flex gap-2" data-require-edit="fuel">
+            <button class="btn btn-primary" id="btnAddFuel">+ Fuel Log</button>
+            <button class="btn btn-secondary" id="btnAddExpense">+ Expense</button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <!-- Fuel Logs -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Fuel Logs</div>
+              <div class="search-box" style="min-width: 160px;">
+                <span class="icon">🔍</span>
+                <input type="text" id="searchFuel" class="form-control" placeholder="Search fuel...">
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Vehicle</th>
+                    <th>Date</th>
+                    <th>Liters</th>
+                    <th>Cost</th>
+                    <th style="text-align: right;" data-require-edit="fuel">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="fuelTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Other Expenses -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Other Expenses</div>
+              <div class="search-box" style="min-width: 160px;">
+                <span class="icon">🔍</span>
+                <input type="text" id="searchExpenses" class="form-control" placeholder="Search expenses...">
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Vehicle</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th style="text-align: right;" data-require-edit="expenses">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="expensesTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Fuel Modal -->
+  <div class="modal-overlay" id="fuelModal">
+    <div class="modal" style="max-width: 460px;">
+      <div class="modal-header">
+        <div class="modal-title">Add Fuel Log</div>
+        <button class="modal-close" data-close-modal>✕</button>
+      </div>
+      <form id="fuelForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Vehicle *</label>
+            <select name="vehicleId" id="fuelVehicleId" class="form-control" required></select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" name="date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Odometer (km)</label>
+              <input type="number" name="odometer" class="form-control" min="0" placeholder="45200">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Liters *</label>
+              <input type="number" name="liters" class="form-control" required min="0" step="0.1" placeholder="45">
+            </div>
+            <div class="form-group">
+              <label>Cost (₹) *</label>
+              <input type="number" name="cost" class="form-control" required min="0" placeholder="4500">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Fuel Log</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Expense Modal -->
+  <div class="modal-overlay" id="expenseModal">
+    <div class="modal" style="max-width: 460px;">
+      <div class="modal-header">
+        <div class="modal-title">Add Expense</div>
+        <button class="modal-close" data-close-expense>✕</button>
+      </div>
+      <form id="expenseForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Vehicle *</label>
+            <select name="vehicleId" id="expenseVehicleId" class="form-control" required></select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Expense Type *</label>
+              <select name="type" class="form-control" required>
+                <option value="">Select type</option>
+                <option value="Toll">Toll</option>
+                <option value="Parking">Parking</option>
+                <option value="Repair">Repair</option>
+                <option value="Insurance">Insurance</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" name="date" class="form-control" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Amount (₹) *</label>
+              <input type="number" name="amount" class="form-control" required min="0" placeholder="850">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="2" placeholder="Optional note..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-expense>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Expense</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/expenses.js"></script>
+</body>
+</html>
