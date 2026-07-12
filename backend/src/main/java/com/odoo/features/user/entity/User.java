@@ -1,13 +1,20 @@
-package com.odoo.entities;
+package com.odoo.features.user.entity;
 
 import com.odoo.entities.enums.RoleName;
 import com.odoo.features.driver.entity.Driver;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "users")
 public class User {
@@ -25,9 +32,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private RoleName role;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     private String phoneNumber;
 
