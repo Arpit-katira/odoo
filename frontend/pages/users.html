@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users — TransitOps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span>🚛</span>
+        <span>TransitOps</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item" data-module="dashboard"><span class="icon">📊</span> Dashboard</a>
+        <a href="vehicles.html" class="nav-item" data-module="vehicles"><span class="icon">🚐</span> Vehicles</a>
+        <a href="drivers.html" class="nav-item" data-module="drivers"><span class="icon">👤</span> Drivers</a>
+        <a href="trips.html" class="nav-item" data-module="trips"><span class="icon">🛣️</span> Trips</a>
+        <a href="maintenance.html" class="nav-item" data-module="maintenance"><span class="icon">🔧</span> Maintenance</a>
+        <a href="expenses.html" class="nav-item" data-module="fuel"><span class="icon">💰</span> Fuel & Expenses</a>
+        <a href="reports.html" class="nav-item" data-module="reports"><span class="icon">📈</span> Reports</a>
+        <a href="users.html" class="nav-item" data-module="users"><span class="icon">🛡️</span> Users</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div>Fleet operations made simple.</div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle">☰</button>
+          <h2 class="page-title">User Management</h2>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" data-theme-toggle>🌙</button>
+          <div class="user-pill">
+            <div class="user-avatar"></div>
+            <div>
+              <div class="user-name font-semibold"></div>
+              <div class="user-role text-xs text-muted"></div>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-sm" data-logout>Logout</button>
+        </div>
+      </header>
+
+      <section class="page-body" data-require-view="users">
+        <div class="page-header">
+          <div>
+            <h1>Users</h1>
+            <p class="text-secondary text-sm">Manage platform users and roles</p>
+          </div>
+          <button class="btn btn-primary" id="btnAddUser" data-require-edit="users">+ Add User</button>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-box">
+            <span class="icon">🔍</span>
+            <input type="text" id="searchUsers" class="form-control" placeholder="Search by name, email, role...">
+          </div>
+          <select id="filterRole" class="form-control">
+            <option value="">All Roles</option>
+          </select>
+          <select id="filterActive" class="form-control">
+            <option value="">All Statuses</option>
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th style="text-align: right;" data-require-edit="users">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <!-- rows rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- User Modal -->
+  <div class="modal-overlay" id="userModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Add User</div>
+        <button class="modal-close" data-close-modal>✕</button>
+      </div>
+      <form id="userForm">
+        <div class="modal-body">
+          <input type="hidden" name="id" id="userId">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" name="name" class="form-control" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" name="email" class="form-control" required placeholder="john@transitops.com">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" name="phoneNumber" class="form-control" placeholder="9876543210">
+            </div>
+            <div class="form-group">
+              <label>Role *</label>
+              <select name="roleId" id="userRoleId" class="form-control" required>
+                <option value="">Select role</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Password *</label>
+              <input type="password" name="password" id="userPassword" class="form-control" required minlength="6" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label>Active</label>
+              <select name="isActive" class="form-control">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/users.js"></script>
+</body>
+</html>

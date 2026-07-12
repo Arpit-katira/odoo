@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — TransitOps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span>🚛</span>
+        <span>TransitOps</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item" data-module="dashboard"><span class="icon">📊</span> Dashboard</a>
+        <a href="pages/vehicles.html" class="nav-item" data-module="vehicles"><span class="icon">🚐</span> Vehicles</a>
+        <a href="pages/drivers.html" class="nav-item" data-module="drivers"><span class="icon">👤</span> Drivers</a>
+        <a href="pages/trips.html" class="nav-item" data-module="trips"><span class="icon">🛣️</span> Trips</a>
+        <a href="pages/maintenance.html" class="nav-item" data-module="maintenance"><span class="icon">🔧</span> Maintenance</a>
+        <a href="pages/expenses.html" class="nav-item" data-module="fuel"><span class="icon">💰</span> Fuel & Expenses</a>
+        <a href="pages/reports.html" class="nav-item" data-module="reports"><span class="icon">📈</span> Reports</a>
+        <a href="pages/users.html" class="nav-item" data-module="users"><span class="icon">🛡️</span> Users</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div>Fleet operations made simple.</div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle">☰</button>
+          <h2 class="page-title">Dashboard</h2>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" data-theme-toggle>🌙</button>
+          <div class="user-pill">
+            <div class="user-avatar"></div>
+            <div>
+              <div class="user-name font-semibold"></div>
+              <div class="user-role text-xs text-muted"></div>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-sm" data-logout>Logout</button>
+        </div>
+      </header>
+
+      <section class="page-body" data-require-view="dashboard">
+        <div class="page-header">
+          <div>
+            <h1>Operations Overview</h1>
+            <p class="text-secondary text-sm">Real-time fleet KPIs and status</p>
+          </div>
+          <div class="toolbar" style="margin-bottom: 0;">
+            <select id="filterType" class="form-control">
+              <option value="">All Vehicle Types</option>
+              <option value="Truck">Truck</option>
+              <option value="Mini Truck">Mini Truck</option>
+              <option value="Pickup">Pickup</option>
+              <option value="Bus">Bus</option>
+            </select>
+            <select id="filterStatus" class="form-control">
+              <option value="">All Statuses</option>
+              <option value="Available">Available</option>
+              <option value="On Trip">On Trip</option>
+              <option value="In Shop">In Shop</option>
+              <option value="Retired">Retired</option>
+            </select>
+            <select id="filterRegion" class="form-control">
+              <option value="">All Regions</option>
+              <option value="Pune">Pune</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Nashik">Nashik</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="kpi-grid" id="kpiGrid">
+          <!-- KPIs rendered by JS -->
+        </div>
+
+        <div class="mt-3 grid-2" style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Fleet Status</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Vehicle</th>
+                    <th>Reg. No.</th>
+                    <th>Type</th>
+                    <th>Region</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="fleetTableBody">
+                  <!-- rows rendered by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Active Trips</div>
+            </div>
+            <div id="activeTripsList">
+              <!-- rendered by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
