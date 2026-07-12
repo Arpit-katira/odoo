@@ -20,6 +20,7 @@ function normalizeRole(role) {
 function getAccess(module, role) {
   const normalizedRole = normalizeRole(role);
   const matrix = {
+    dashboard:   { admin: 'full', dispatcher: 'full', safety_officer: 'full', financial_analyst: 'full' },
     users:       { admin: 'full' },
     drivers:     { admin: 'full', dispatcher: 'full', safety_officer: 'full', financial_analyst: 'view' },
     vehicles:    { admin: 'full', dispatcher: 'full', safety_officer: 'view', financial_analyst: 'view' },
@@ -57,14 +58,28 @@ function applyRoleAccess(role) {
   });
 }
 
+function detectRedirectLoop() {
+  const key = 'transitops-redirect-count';
+  const last = parseInt(sessionStorage.getItem(key) || '0', 10);
+  if (last > 4) {
+    localStorage.removeItem('transitops-user');
+    sessionStorage.removeItem(key);
+    return true;
+  }
+  sessionStorage.setItem(key, String(last + 1));
+  return false;
+}
+
 function guardPageAccess(module) {
   const user = loadFromStorage('transitops-user');
   if (!user) {
+    if (detectRedirectLoop()) return null;
     window.location.href = '../index.html';
     return null;
   }
   if (!canView(module, user.role)) {
     toast('You do not have access to this module.', 'error');
+    if (detectRedirectLoop()) return null;
     // Don't redirect to dashboard if already on dashboard to avoid loops
     const currentPage = location.pathname.split('/').pop() || 'dashboard.html';
     if (currentPage === 'dashboard.html' || module === 'dashboard') {
@@ -74,6 +89,8 @@ function guardPageAccess(module) {
     }
     return null;
   }
+  // Reset redirect counter on successful access
+  sessionStorage.removeItem('transitops-redirect-count');
   return user;
 }
 

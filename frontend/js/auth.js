@@ -5,10 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = $('#loginForm');
   const errorBox = $('#loginError');
 
-  // Auto redirect if already logged in
+  // Auto redirect if already logged in with valid role
   const user = loadFromStorage('transitops-user');
-  if (user) {
+  if (user && canView('dashboard', user.role)) {
     window.location.href = 'dashboard.html';
+  } else if (user) {
+    // Invalid/corrupted user data — clear it
+    localStorage.removeItem('transitops-user');
   }
 
   if (!form) return;

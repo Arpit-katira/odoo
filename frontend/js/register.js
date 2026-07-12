@@ -10,11 +10,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const successBox = $('#registerSuccess');
   const roleSelect = $('#roleId');
 
-  // Redirect if already logged in
+  // Redirect if already logged in with valid role
   const user = loadFromStorage('transitops-user');
-  if (user) {
+  if (user && canView('dashboard', user.role)) {
     window.location.href = 'dashboard.html';
     return;
+  } else if (user) {
+    localStorage.removeItem('transitops-user');
   }
 
   try {
