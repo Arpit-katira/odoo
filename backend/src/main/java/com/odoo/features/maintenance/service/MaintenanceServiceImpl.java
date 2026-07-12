@@ -33,9 +33,9 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         record.setCost(dto.getCost());
         record.setStatus(dto.getStatus());
 
-        if (dto.getStatus() == MaintenanceStatus.IN_PROGRESS) {
+        if (dto.getStatus() == MaintenanceStatus.OPEN) {
             record.setStartedAt(LocalDateTime.now());
-        } else if (dto.getStatus() == MaintenanceStatus.COMPLETED) {
+        } else if (dto.getStatus() == MaintenanceStatus.CLOSED) {
             record.setCompletedAt(LocalDateTime.now());
         }
 
@@ -52,6 +52,10 @@ public class MaintenanceServiceImpl implements MaintenanceService {
             if (dto.getStatus() == MaintenanceStatus.IN_PROGRESS) {
                 vehicle.setStatus(VehicleStatus.IN_SHOP);
             } else if (dto.getStatus() == MaintenanceStatus.COMPLETED) {
+                vehicle.setStatus(VehicleStatus.AVAILABLE);
+            if (dto.getStatus() == MaintenanceStatus.OPEN) {
+                vehicle.setStatus(VehicleStatus.IN_SHOP);
+            } else if (dto.getStatus() == MaintenanceStatus.CLOSED) {
                 vehicle.setStatus(VehicleStatus.AVAILABLE);
             }
 
