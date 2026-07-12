@@ -1,4 +1,4 @@
-package com.odoo.entities.enums;
+package com.odoo.features.driver.entity;
 
 public enum DriverStatus {
     AVAILABLE,

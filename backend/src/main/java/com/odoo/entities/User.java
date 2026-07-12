@@ -1,6 +1,7 @@
 package com.odoo.entities;
 
 import com.odoo.entities.enums.RoleName;
+import com.odoo.features.driver.entity.Driver;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

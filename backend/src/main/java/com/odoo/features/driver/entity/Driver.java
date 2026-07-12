@@ -1,8 +1,11 @@
-package com.odoo.entities;
+package com.odoo.features.driver.entity;
 
-import com.odoo.entities.enums.DriverStatus;
-import com.odoo.entities.enums.LicenseCategory;
+import com.odoo.entities.Trip; // Aryan ke folder se Trip
+import com.odoo.entities.User; // Aryan ke folder se User
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,6 +16,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "drivers")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Driver {
 
     @Id

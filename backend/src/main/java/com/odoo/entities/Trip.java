@@ -1,13 +1,12 @@
 package com.odoo.entities;
 
 
-import com.odoo.entities.enums.DriverStatus;
 import com.odoo.entities.enums.TripStatus;
+import com.odoo.features.driver.entity.Driver;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
