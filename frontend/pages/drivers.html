@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drivers — TransitOps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span>🚛</span>
+        <span>TransitOps</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item" data-module="dashboard"><span class="icon">📊</span> Dashboard</a>
+        <a href="vehicles.html" class="nav-item" data-module="vehicles"><span class="icon">🚐</span> Vehicles</a>
+        <a href="drivers.html" class="nav-item" data-module="drivers"><span class="icon">👤</span> Drivers</a>
+        <a href="trips.html" class="nav-item" data-module="trips"><span class="icon">🛣️</span> Trips</a>
+        <a href="maintenance.html" class="nav-item" data-module="maintenance"><span class="icon">🔧</span> Maintenance</a>
+        <a href="expenses.html" class="nav-item" data-module="fuel"><span class="icon">💰</span> Fuel & Expenses</a>
+        <a href="reports.html" class="nav-item" data-module="reports"><span class="icon">📈</span> Reports</a>
+        <a href="users.html" class="nav-item" data-module="users"><span class="icon">🛡️</span> Users</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div>Fleet operations made simple.</div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle">☰</button>
+          <h2 class="page-title">Driver Management</h2>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" data-theme-toggle>🌙</button>
+          <div class="user-pill">
+            <div class="user-avatar"></div>
+            <div>
+              <div class="user-name font-semibold"></div>
+              <div class="user-role text-xs text-muted"></div>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-sm" data-logout>Logout</button>
+        </div>
+      </header>
+
+      <section class="page-body" data-require-view="drivers">
+        <div class="page-header">
+          <div>
+            <h1>Drivers</h1>
+            <p class="text-secondary text-sm">Manage driver profiles and compliance</p>
+          </div>
+          <button class="btn btn-primary" id="btnAddDriver" data-require-edit="drivers">+ Add Driver</button>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-box">
+            <span class="icon">🔍</span>
+            <input type="text" id="searchDrivers" class="form-control" placeholder="Search by name, license, contact...">
+          </div>
+          <select id="filterStatus" class="form-control">
+            <option value="">All Statuses</option>
+            <option value="Available">Available</option>
+            <option value="On Trip">On Trip</option>
+            <option value="Off Duty">Off Duty</option>
+            <option value="Suspended">Suspended</option>
+          </select>
+          <select id="filterExpiry" class="form-control">
+            <option value="">All Licenses</option>
+            <option value="expired">Expired</option>
+            <option value="expiring">Expiring within 30 days</option>
+            <option value="valid">Valid</option>
+          </select>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>License No.</th>
+                  <th>Category</th>
+                  <th>License Expiry</th>
+                  <th>Contact</th>
+                  <th>Safety Score</th>
+                  <th>Status</th>
+                  <th style="text-align: right;" data-require-edit="drivers">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="driversTableBody">
+                <!-- rows rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Driver Modal -->
+  <div class="modal-overlay" id="driverModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Add Driver</div>
+        <button class="modal-close" data-close-modal>✕</button>
+      </div>
+      <form id="driverForm">
+        <div class="modal-body">
+          <input type="hidden" name="id" id="driverId">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" name="name" class="form-control" required placeholder="Alex Fernandes">
+            </div>
+            <div class="form-group">
+              <label>License Number *</label>
+              <input type="text" name="licenseNo" class="form-control" required placeholder="MH0120210001234">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>License Category *</label>
+              <select name="licenseCategory" class="form-control" required>
+                <option value="">Select category</option>
+                <option value="LMV">LMV</option>
+                <option value="HMV">HMV</option>
+                <option value="HPMV">HPMV</option>
+                <option value="HTV">HTV</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>License Expiry Date *</label>
+              <input type="date" name="licenseExpiry" class="form-control" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Contact Number *</label>
+              <input type="tel" name="contact" class="form-control" required placeholder="9876543210">
+            </div>
+            <div class="form-group">
+              <label>Safety Score (0-100)</label>
+              <input type="number" name="safetyScore" class="form-control" min="0" max="100" placeholder="85">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Status</label>
+              <select name="status" class="form-control">
+                <option value="Available">Available</option>
+                <option value="On Trip">On Trip</option>
+                <option value="Off Duty">Off Duty</option>
+                <option value="Suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Driver</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/drivers.js"></script>
+</body>
+</html>
