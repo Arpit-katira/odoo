@@ -6,6 +6,7 @@ import com.odoo.entities.FuelLog;
 import com.odoo.entities.enums.TripStatus;
 import com.odoo.features.vehicle.entity.Vehicle;
 import com.odoo.features.driver.entity.Driver;
+import com.odoo.features.expense.entity.Expense;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

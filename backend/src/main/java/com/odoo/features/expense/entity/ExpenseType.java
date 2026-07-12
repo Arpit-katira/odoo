@@ -1,4 +1,4 @@
-package com.odoo.entities.enums;
+package com.odoo.features.expense.entity;
 
 public enum ExpenseType {
     TOLL,
