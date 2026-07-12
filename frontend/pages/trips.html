@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trips — TransitOps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span>🚛</span>
+        <span>TransitOps</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../dashboard.html" class="nav-item" data-module="dashboard"><span class="icon">📊</span> Dashboard</a>
+        <a href="vehicles.html" class="nav-item" data-module="vehicles"><span class="icon">🚐</span> Vehicles</a>
+        <a href="drivers.html" class="nav-item" data-module="drivers"><span class="icon">👤</span> Drivers</a>
+        <a href="trips.html" class="nav-item" data-module="trips"><span class="icon">🛣️</span> Trips</a>
+        <a href="maintenance.html" class="nav-item" data-module="maintenance"><span class="icon">🔧</span> Maintenance</a>
+        <a href="expenses.html" class="nav-item" data-module="fuel"><span class="icon">💰</span> Fuel & Expenses</a>
+        <a href="reports.html" class="nav-item" data-module="reports"><span class="icon">📈</span> Reports</a>
+        <a href="users.html" class="nav-item" data-module="users"><span class="icon">🛡️</span> Users</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div>Fleet operations made simple.</div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle">☰</button>
+          <h2 class="page-title">Trip Management</h2>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" data-theme-toggle>🌙</button>
+          <div class="user-pill">
+            <div class="user-avatar"></div>
+            <div>
+              <div class="user-name font-semibold"></div>
+              <div class="user-role text-xs text-muted"></div>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-sm" data-logout>Logout</button>
+        </div>
+      </header>
+
+      <section class="page-body" data-require-view="trips">
+        <div class="page-header">
+          <div>
+            <h1>Trips</h1>
+            <p class="text-secondary text-sm">Plan, dispatch, and complete trips</p>
+          </div>
+          <button class="btn btn-primary" id="btnAddTrip" data-require-edit="trips">+ Create Trip</button>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-box">
+            <span class="icon">🔍</span>
+            <input type="text" id="searchTrips" class="form-control" placeholder="Search by route, vehicle, driver...">
+          </div>
+          <select id="filterStatus" class="form-control">
+            <option value="">All Statuses</option>
+            <option value="Draft">Draft</option>
+            <option value="Dispatched">Dispatched</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Source → Destination</th>
+                  <th>Vehicle</th>
+                  <th>Driver</th>
+                  <th>Cargo (kg)</th>
+                  <th>Distance (km)</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th style="text-align: right;" data-require-edit="trips">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tripsTableBody">
+                <!-- rows rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Create/Edit Trip Modal -->
+  <div class="modal-overlay" id="tripModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Create Trip</div>
+        <button class="modal-close" data-close-modal>✕</button>
+      </div>
+      <form id="tripForm">
+        <div class="modal-body">
+          <input type="hidden" name="id" id="tripId">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Source *</label>
+              <input type="text" name="source" class="form-control" required placeholder="Pune">
+            </div>
+            <div class="form-group">
+              <label>Destination *</label>
+              <input type="text" name="destination" class="form-control" required placeholder="Mumbai">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Vehicle *</label>
+              <select name="vehicleId" id="tripVehicleId" class="form-control" required>
+                <option value="">Select available vehicle</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Driver *</label>
+              <select name="driverId" id="tripDriverId" class="form-control" required>
+                <option value="">Select available driver</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Cargo Weight (kg) *</label>
+              <input type="number" name="cargoWeight" id="tripCargoWeight" class="form-control" required min="1" placeholder="450">
+            </div>
+            <div class="form-group">
+              <label>Planned Distance (km) *</label>
+              <input type="number" name="plannedDistance" class="form-control" required min="1" placeholder="150">
+            </div>
+          </div>
+          <div id="capacityHint" class="text-sm" style="color: var(--text-secondary);"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Draft</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Complete Trip Modal -->
+  <div class="modal-overlay" id="completeModal">
+    <div class="modal" style="max-width: 420px;">
+      <div class="modal-header">
+        <div class="modal-title">Complete Trip</div>
+        <button class="modal-close" data-close-complete>✕</button>
+      </div>
+      <form id="completeForm">
+        <div class="modal-body">
+          <input type="hidden" name="tripId" id="completeTripId">
+          <div class="form-group">
+            <label>Actual Distance (km)</label>
+            <input type="number" name="actualDistance" class="form-control" required min="0" placeholder="152">
+          </div>
+          <div class="form-group">
+            <label>Fuel Consumed (liters)</label>
+            <input type="number" name="fuelConsumed" class="form-control" required min="0" step="0.1" placeholder="18">
+          </div>
+          <div class="form-group">
+            <label>Final Odometer (km)</label>
+            <input type="number" name="finalOdometer" class="form-control" required min="0" placeholder="45352">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-complete>Cancel</button>
+          <button type="submit" class="btn btn-success">Complete Trip</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/trips.js"></script>
+</body>
+</html>
