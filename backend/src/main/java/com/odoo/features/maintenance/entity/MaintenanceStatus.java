@@ -1,4 +1,4 @@
-package com.odoo.entities.enums;
+package com.odoo.features.maintenance.entity;
 
 public enum MaintenanceStatus {
     OPEN,
