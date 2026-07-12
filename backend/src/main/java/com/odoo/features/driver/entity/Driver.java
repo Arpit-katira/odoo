@@ -1,6 +1,6 @@
 package com.odoo.features.driver.entity;
 
-import com.odoo.entities.Trip; // Aryan ke folder se Trip
+import com.odoo.features.trip.entity.Trip; // Aryan ke folder se Trip
 import com.odoo.entities.User; // Aryan ke folder se User
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

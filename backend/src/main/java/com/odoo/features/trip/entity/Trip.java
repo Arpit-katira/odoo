@@ -1,10 +1,13 @@
-package com.odoo.entities;
+package com.odoo.features.trip.entity;
 
 
+import com.odoo.entities.Expense;
+import com.odoo.entities.FuelLog;
 import com.odoo.entities.enums.TripStatus;
 import com.odoo.features.vehicle.entity.Vehicle;
 import com.odoo.features.driver.entity.Driver;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,6 +15,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "trips")
 public class Trip {

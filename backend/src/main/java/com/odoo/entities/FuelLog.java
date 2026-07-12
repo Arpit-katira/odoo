@@ -1,6 +1,7 @@
 package com.odoo.entities;
 
 
+import com.odoo.features.trip.entity.Trip;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

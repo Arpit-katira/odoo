@@ -2,7 +2,7 @@ package com.odoo.features.vehicle.entity;
 
 
 import com.odoo.entities.MaintenanceRecord;
-import com.odoo.entities.Trip;
+import com.odoo.features.trip.entity.Trip;
 import com.odoo.entities.enums.VehicleStatus;
 import com.odoo.entities.enums.VehicleType;
 import jakarta.persistence.*;

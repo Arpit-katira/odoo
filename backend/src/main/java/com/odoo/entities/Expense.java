@@ -2,6 +2,7 @@ package com.odoo.entities;
 
 
 import com.odoo.entities.enums.ExpenseType;
+import com.odoo.features.trip.entity.Trip;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
