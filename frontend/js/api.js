@@ -25,8 +25,8 @@ const DEFAULT_USERS = [
 
 const DEFAULT_VEHICLES = [
   { id: 'v1', regNo: 'MH12AB1234', name: 'Tata Ace', type: 'Mini Truck', capacity: 750, odometer: 12400, acquisitionCost: 650000, status: 'Available', region: 'Pune' },
-  { id: 'v2', regNo: 'MH14CD5678', name: 'Eicher Pro', type: 'Truck', capacity: 3500, odometer: 45200, acquisitionCost: 1850000, status: 'On Trip', region: 'Mumbai' },
-  { id: 'v3', regNo: 'MH02EF9012', name: 'Ashok Leyland', type: 'Bus', capacity: 5000, odometer: 78900, acquisitionCost: 2200000, status: 'In Shop', region: 'Nashik' },
+  { id: 'v2', regNo: 'MH14CD5678', name: 'Eicher Pro', type: 'Trailer', capacity: 3500, odometer: 45200, acquisitionCost: 1850000, status: 'On Trip', region: 'Mumbai' },
+  { id: 'v3', regNo: 'MH02EF9012', name: 'Ashok Leyland', type: 'Trailer', capacity: 5000, odometer: 78900, acquisitionCost: 2200000, status: 'In Shop', region: 'Nashik' },
   { id: 'v4', regNo: 'MH11GH3456', name: 'Mahindra Bolero', type: 'Pickup', capacity: 500, odometer: 5600, acquisitionCost: 950000, status: 'Available', region: 'Pune' }
 ];
 
